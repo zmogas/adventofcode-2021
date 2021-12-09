@@ -1,13 +1,14 @@
 const fs = require('fs');
 
-const day = '06d';
+const day = '06';
 
 const input = fs.readFileSync(`${day}.txt`, 'utf-8');
 
 const fish = input.split(',').map(i => parseInt(i));
 
-let days = 18;
+let days = 256;
 
+/*
 for (let d = 1; d <= days; d++) {
   for (let i = 0; i < fish.length; i++) {
     fish[i] -= 1;
@@ -43,3 +44,31 @@ const total = (days, newFish) => {
 
 const rec = total(days, created);
 console.log({ days, total2, created, rec });
+*/
+
+const age = [];
+for (let i = 0; i < 9; i++) {
+  age[i] = 0;
+}
+
+for (let i = 0; i < fish.length; i++) {
+  age[fish[i]] += 1;
+}
+
+// console.log(age);
+
+for (let day = 1; day <= days; day++) {
+  // age[ (day + 7) % 9 ] += age[ day % 9 ];
+  let zero_val = age[0];
+  for (let i = 0; i < age.length - 1; i++) {
+    age[i] = age[i + 1];
+  }
+  age[6] = age[6] + zero_val;
+  age[8] = zero_val;
+}
+
+let total = 0;
+for (let i = 0; i < age.length; i++) {
+  total += age[i];
+}
+console.log(age, total);
