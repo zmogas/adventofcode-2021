@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const day = '09d';
+const day = '09';
 
 const input = fs.readFileSync(`${day}.txt`, 'utf-8');
 
@@ -8,6 +8,7 @@ const input = fs.readFileSync(`${day}.txt`, 'utf-8');
 const map = input.split(/\n/);
 
 let risk = 0;
+let riskCount = 0;
 
 for (let i = 0; i < map.length; i++) {
   for (let j = 0; j < map[i].length; j++) {
@@ -20,6 +21,7 @@ for (let i = 0; i < map.length; i++) {
     ) {
       // console.log('Found', i, j, current);
       risk += 1 + current;
+      riskCount++;
     }
   }
 }
@@ -34,24 +36,32 @@ let usedCoords = [];
 // type Direction = 'left' | 'right' | 'down' | 'up';
 const getBasinSize = (i, j, prev, direction) => {
   if (i < 0 || j < 0 || i >= maxI || j >= maxJ) {
-    // console.log('overflow', {i, j});
+    console.log('overflow', {i, j});
     return 0;
   }
   const coords = `${i}-${j}`;
-  if (usedCoords.indexOf(coords) != -1) {
-    console.log('already used', coords);
-    return 0;
-  }
+  // if (usedCoords.indexOf(coords) != -1) {
+  //   console.log('already used', coords);
+  //   return 0;
+  // }
   const current = parseInt(map[i][j]);
-  if (current == 9 || current != prev + 1) {
+  if (current == 9 || current <= prev) {
     // console.log('not sequence', {i, j, prev, current});
     return 0;
   }
 
   // console.log('calc(+1)', {i, j, direction, prev, current});
-  const addIfNotUsed = ((usedCoords.indexOf(coords) != -1) ? 0 : 1);
-  usedCoords.push(coords);
+  let addIfNotUsed = 0;
+  if (usedCoords.indexOf(coords) == -1) {
+    usedCoords.push(coords);
+    addIfNotUsed = 1;
+  }
 
+  const a = (getBasinSize(i, j-1, current, 'left'));
+  const b = (getBasinSize(i, j+1, current, 'right'));
+  const c = (getBasinSize(i-1, j, current, 'up'));
+  const d = (getBasinSize(i+1, j, current, 'down'));
+  return addIfNotUsed + a + b + c + d;
   return addIfNotUsed
     + (getBasinSize(i, j-1, current, 'left'))
     + (getBasinSize(i, j+1, current, 'right'))
@@ -63,19 +73,11 @@ const getBasinSize = (i, j, prev, direction) => {
     // + (direction == 'up' ? 0 : getBasinSize(i+1, j, current, 'down'));
 }
 
-const getBasin2 = (i, j) => {
+const getBasin2 = (i, j, current) => {
   const count = 1;
-  let c = 1;
   let found = false;
-  while (i-c>0 || j-c>0 || i+c<maxI-1 || j+c<maxJ) {
-    found = false;
-    if (i-c>0) {
-      //
-    }
-    if (!found) {
-      break;
-    }
-    c++;
+  for (let c = current; c < 9; c++) {
+    //
   }
   return count;
 }
@@ -93,8 +95,12 @@ for (let i = 0; i < map.length; i++) {
     ) {
       console.log();
       console.log('Found', i, j, current);
-      // usedCoords = [];
-      basins.push(getBasin2(i, j));
+      usedCoords = [];
+      const size = getBasinSize(i, j, current-1);
+      const usedLen = usedCoords.length;
+      console.log({size, usedLen});
+      basins.push(size);
+      // basins.push(getBasin2(i, j, current));
     }
   }
 }
@@ -105,7 +111,9 @@ const sorted = basins.sort((a, b) => a == b ? 0 : a > b ? -1 : 1);
 console.log({sorted})
 const ats2 = sorted[0] * sorted[1] * sorted[2];
 
+console.log({riskCount}, basins.length)
 console.log('ats2:', ats2);
 
 // 734096 your answer is too low
+// 1235430 That's the right answer!
 // 187939980 your answer is too high
