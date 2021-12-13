@@ -45,7 +45,7 @@ const printDots = () => {
   for (let y = 0; y <= maxY; y++) {
     line = '';
     for (let x = 0; x <= maxX; x++) {
-      line += dots[y][x];
+      line += dots[y][x] > 0 ? '#' : ' ';
     }
     console.log(line);
   }
@@ -96,9 +96,12 @@ for (let i = 0; i < folds.length; i++) {
   dots = newDots;
   console.log('folded', fold);
   printDots();
-  break;
+  // break;
 }
 
 console.log('Ats1:', countDots());
 
 // 104    your answer is too low
+// 720 is right for part 1
+//
+// Part2 answer is graphical: AHPRPAUZ
