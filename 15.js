@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const day = '15';
+const day = '15d';
 
 const input = fs.readFileSync(`${day}.txt`, 'utf-8');
 const lines = input.split(/\n/);
@@ -18,6 +18,16 @@ console.log({ chiton, max });
 
 const paths = [];
 
+const valxy = (x, y, step) => {
+  const xx = parseInt(step[0]);
+  const yy = parseInt(step[1]);
+  if (x + xx > max || y + yy > max) {
+    return 99;
+  }
+  console.log(y + yy, x + xx, chiton[y + yy][x + xx])
+  return chiton[y + yy][x + xx];
+}
+
 const search = (x, y, visited, sum) => {
   const place = `${x}-${y}`;
   if (visited.includes(place)) {
@@ -34,12 +44,40 @@ const search = (x, y, visited, sum) => {
   if (x % 5 == 0 && y % 5 == 0) {
     console.log({x, y, sum});
   }
-  if (x < max) {
-    search(x + 1, y, newVisited, newSum);
+
+  // calculate next 3 steps, take lowest result. String is xyxyxy, where says how many steps to add
+  const steps = [
+    '102030',
+    '102021',
+    '101121',
+    '101112',
+    '011121',
+    '011112',
+    '010212',
+    '010203'
+  ];
+  const values = [];
+  for (let i = 0; i < steps.length; i++) {
+    console.log(steps[i].substring(0, 2), steps[i].substring(2, 4), steps[i].substring(4, 6))
+    const val = valxy(x, y, steps[i].substring(0, 2))
+      + valxy(x, y, steps[i].substring(2, 4))
+      + valxy(x, y, steps[i].substring(4, 6));
+    console.log({ val });
   }
-  if (y < max) {
-    search(x, y + 1, newVisited, newSum);
-  }
+  // if (x < max && y < max) {
+  //   const diff = chiton[y + 1][x] - chiton[y][x + 1];
+  //   if (diff > 0) {
+  //     search(x + 1, y, newVisited, newSum);
+  //   } else {
+  //     search(x, y + 1, newVisited, newSum);
+  //   }
+  // }
+  // else if (x < max) {
+  //   search(x + 1, y, newVisited, newSum);
+  // }
+  // else if (y < max) {
+  //   search(x, y + 1, newVisited, newSum);
+  // }
   // if (x > 0) {
   //   search(x - 1, y, newVisited, newSum);
   // }
@@ -77,3 +115,7 @@ real    34m35,632s
 user    34m45,924s
 sys     0m9,748s
 */
+
+
+// 776   your answer is too high
+//
