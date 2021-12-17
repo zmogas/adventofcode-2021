@@ -61,7 +61,7 @@ const dequeue = () => {
 // addNode('1-0');
 // addEdge('0-0', '1-0', chiton[0][1]);
 // return;
-max = 4;
+// max = 4;
 
 for (let y = 0; y <= max; y++) {
   for (let x = 0; x <= max; x++) {
@@ -93,14 +93,15 @@ nodes.forEach(node => {
 
 enqueue([startNode, 0]);
 // enqueue(['0-3', 5]);
+// enqueue(['2-3', 5]);
 
 while (!isEmpty()) {
   let shortestStep = dequeue();
   let currentNode = shortestStep[0];
-  console.log({shortestStep});
+  // console.log({shortestStep});
 
   adjacency[currentNode].forEach(neighbor => {
-    console.log({neighbor});
+    // console.log({neighbor});
     let time = times[currentNode] + neighbor.weight;
 
     if (time < times[neighbor.node] || times[neighbor.node] == Infinity) {
@@ -112,6 +113,29 @@ while (!isEmpty()) {
 }
 
 console.log(times);
+
+// enqueue(['0-3', 5]);
+// // enqueue(['2-3', 999]);
+
+// while (!isEmpty()) {
+//   let shortestStep = dequeue();
+//   let currentNode = shortestStep[0];
+//   // console.log({shortestStep});
+
+//   adjacency[currentNode].forEach(neighbor => {
+//     // console.log({neighbor});
+//     let time = times[currentNode] + neighbor.weight;
+
+//     if (time < times[neighbor.node] || times[neighbor.node] == Infinity) {
+//       times[neighbor.node] = time;
+//       backtrace[neighbor.node] = currentNode;
+//       enqueue([neighbor.node, time]);
+//     }
+//   });
+// }
+
+// console.log(times);
+
 // console.log(backtrace);
 console.log();
 console.log('Time table');
